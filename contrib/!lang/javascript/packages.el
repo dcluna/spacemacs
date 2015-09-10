@@ -23,6 +23,7 @@
     js-doc
     web-beautify
     skewer-mode
+    livid-mode
     ))
 
 (defun javascript/init-coffee-mode ()
@@ -197,7 +198,6 @@
 
 (defun javascript/init-skewer-mode ()
   (use-package skewer-mode
-    ;; :if nil
     :defer t
     :init
     (progn
@@ -212,3 +212,11 @@
       (evil-leader/set-key-for-mode 'js2-mode "msp" 'skewer-eval-print-last-expression)
       (evil-leader/set-key-for-mode 'js2-mode "msd" 'skewer-eval-defun)
       )))
+
+(defun javascript/init-livid-mode ()
+  (use-package livid-mode
+    :defer t
+    :init
+    (progn
+      (defalias 'js-live-eval 'livid-mode "Minor mode for automatic evaluation of a JavaScript buffer on every change")
+      (evil-leader/set-key-for-mode 'js2-mode "mst" 'js-live-eval))))
