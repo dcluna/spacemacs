@@ -22,6 +22,7 @@
     tern
     js-doc
     web-beautify
+    skewer-mode
     ))
 
 (defun javascript/init-coffee-mode ()
@@ -193,3 +194,21 @@
       :defer t
       :init
       (push 'company-tern company-backends-js2-mode))))
+
+(defun javascript/init-skewer-mode ()
+  (use-package skewer-mode
+    ;; :if nil
+    :defer t
+    :init
+    (progn
+      (httpd-start)
+      (add-hook 'js2-mode-hook 'skewer-mode))
+    :config
+    (progn
+      (evil-leader/set-key-for-mode 'js2-mode "msi" 'run-skewer)
+      (evil-leader/set-key-for-mode 'js2-mode "msr" 'skewer-repl)
+      (evil-leader/set-key-for-mode 'js2-mode "msb" 'skewer-load-buffer)
+      (evil-leader/set-key-for-mode 'js2-mode "mse" 'skewer-eval-last-expression)
+      (evil-leader/set-key-for-mode 'js2-mode "msp" 'skewer-eval-print-last-expression)
+      (evil-leader/set-key-for-mode 'js2-mode "msd" 'skewer-eval-defun)
+      )))
