@@ -201,8 +201,8 @@
     :defer t
     :init
     (progn
-      (httpd-start) ;; this starts the server process - otherwise we need to call httpd-start or run-skewer manually
-      (add-hook 'js2-mode-hook 'skewer-mode))
+      (add-hook 'js2-mode-hook 'skewer-mode)
+      (httpd-start)) ;; this starts the server process - otherwise we need to call httpd-start or run-skewer manually
     :config
     (progn
       (evil-leader/set-key-for-mode 'js2-mode "msi" 'run-skewer)
