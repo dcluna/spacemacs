@@ -201,7 +201,7 @@
     :defer t
     :init
     (progn
-      (httpd-start)
+      (httpd-start) ;; this starts the server process - otherwise we need to call httpd-start or run-skewer manually
       (add-hook 'js2-mode-hook 'skewer-mode))
     :config
     (progn
