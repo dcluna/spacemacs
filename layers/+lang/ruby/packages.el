@@ -14,6 +14,10 @@
         bundler
         chruby
         company
+        (emacs-rufo :location (recipe
+                               :repo "aleandros/emacs-rufo"
+                               :fetcher github
+                               :files (".el")))
         (enh-ruby-mode :toggle ruby-enable-enh-ruby-mode)
         evil-matchit
         flycheck
@@ -64,6 +68,15 @@
     :defer t
     :init (spacemacs/add-to-hooks 'chruby-use-corresponding
                                   '(ruby-mode-hook enh-ruby-mode-hook))))
+
+(defun ruby/init-emacs-rufo ()
+  (use-package rufo
+    :init (progn
+            (setq rufo-enable-format-on-save t)
+            (add-to-list 'load-path (concat quelpa-build-dir "/emacs-rufo")))
+    :config (dolist (mode '(ruby-mode enh-ruby-mode))
+              (spacemacs/set-leader-keys-for-major-mode mode
+                "=b" 'rufo-format-buffer))))
 
 (defun ruby/init-enh-ruby-mode ()
   (use-package enh-ruby-mode
