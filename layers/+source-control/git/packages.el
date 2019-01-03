@@ -25,7 +25,7 @@
         (helm-git-grep :requires helm)
         (helm-gitignore :requires helm)
         magit
-        magit-gitflow
+        (magit-gitflow :toggle git-enable-magit-gitflow)
         magit-svn
         (orgit :requires org)
         smeargle
