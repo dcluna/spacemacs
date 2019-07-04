@@ -52,13 +52,33 @@
   "Allow the user to run git-link in a git-timemachine buffer."
   (interactive)
   (require 'git-link)
-  (if (and (boundp 'git-timemachine-revision)
-           git-timemachine-revision)
-      (cl-letf (((symbol-function 'git-link--branch)
-                 (lambda ()
-                   (car git-timemachine-revision))))
-        (call-interactively 'git-link))
-    (call-interactively 'git-link)))
+  (acond ((and (boundp 'git-timemachine-revision) (car git-timemachine-revision))
+          (cl-letf (((symbol-function 'git-link--branch))
+                    (lambda ()
+                      it))
+            (call-interactively 'git-link)))
+         ((and magit-blame-mode (oref (magit-blame-chunk-at (point)) :orig-rev))
+          (cl-letf (((symbol-function 'git-link--commit)
+                     (lambda ()
+                       it))
+                    ((symbol-function 'git-link--relative-filename)
+                     (lambda ()
+                       (magit-current-file)))
+                    ((symbol-function 'git-link--handler)
+                     (lambda (a b)
+                       (lambda (hostname dirname filename branch commit start end)
+                         (format "https://%s/%s/blame/%s/%s"
+                                 hostname
+                                 dirname
+                                 (or branch commit)
+                                 (concat filename
+                                         (when start
+                                           (concat "#"
+                                                   (if end
+                                                       (format "L%s-L%s" start end)
+                                                     (format "L%s" start))))))))))
+            (git-link (git-link--select-remote) (oref (magit-blame-chunk-at (point)) :final-line) nil)))
+         (t (call-interactively 'git-link))))
 
 (defun spacemacs/git-link-commit ()
   "Allow the user to run git-link-commit in a git-timemachine buffer."
